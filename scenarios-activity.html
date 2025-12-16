@@ -50,16 +50,10 @@
 
         .section {
             display: none;
-            animation: fadeIn 0.5s ease-in;
         }
 
         .section.active {
             display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .intro-section {
@@ -106,6 +100,17 @@
             margin-bottom: 25px;
         }
 
+        .scenario-counter {
+            background: #5B9A92;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
         .scenario-title {
             font-size: 1.5em;
             color: #3D3D3D;
@@ -147,30 +152,12 @@
             text-align: left;
             font-size: 1.05em;
             color: #3D3D3D;
-            position: relative;
-            overflow: hidden;
         }
 
         .choice-btn:hover {
             background: #F4F8F7;
             transform: translateX(5px);
             box-shadow: 0 4px 12px rgba(91, 154, 146, 0.2);
-        }
-
-        .choice-btn::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 4px;
-            background: #5B9A92;
-            transform: scaleY(0);
-            transition: transform 0.3s ease;
-        }
-
-        .choice-btn:hover::before {
-            transform: scaleY(1);
         }
 
         .choice-btn.selected-correct {
@@ -188,7 +175,6 @@
             padding: 25px;
             border-radius: 8px;
             margin-top: 25px;
-            animation: slideDown 0.4s ease;
             line-height: 1.7;
         }
 
@@ -223,24 +209,6 @@
 
         .try-again-btn:hover {
             background: #D46A40;
-            transform: translateY(-2px);
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .feedback-icon {
-            font-size: 1.5em;
-            margin-right: 10px;
-            display: inline-block;
         }
 
         .nav-buttons {
@@ -308,32 +276,6 @@
         .trophy {
             font-size: 5em;
             margin-bottom: 20px;
-            animation: bounce 1s ease infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .scenario-counter {
-            background: #5B9A92;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 15px;
-            font-size: 0.9em;
-            font-weight: 600;
-        }
-
-        .reset-btn {
-            background: #E67E50;
-            margin-top: 20px;
-        }
-
-        .reset-btn:hover {
-            background: #D46A40;
         }
 
         .progress-indicator {
@@ -359,12 +301,21 @@
         .progress-dot.completed {
             background: #E6B855;
         }
+
+        .reset-btn {
+            background: #E67E50;
+            margin-top: 20px;
+        }
+
+        .reset-btn:hover {
+            background: #D46A40;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>📋 RFP Writing Scenarios</h1>
+            <h1>RFP Writing Scenarios</h1>
             <p>Apply your knowledge to real-world situations</p>
         </div>
 
@@ -372,9 +323,9 @@
             <div id="intro-section" class="section active">
                 <div class="intro-section">
                     <h2>Test Your RFP Expertise</h2>
-                    <p>You'll encounter four real-world scenarios that test your ability to identify common RFP gaps and determine where writers should focus their efforts. Each scenario presents a situation where an RFP has gone wrong, and you'll diagnose the issue.</p>
-                    <p>Read each scenario carefully and select the best answer. You'll receive detailed feedback to reinforce your learning.</p>
-                    <button class="continue-btn" onclick="startScenarios()">Begin Scenarios →</button>
+                    <p>You will encounter four real-world scenarios that test your ability to identify common RFP gaps and determine where writers should focus their efforts. Each scenario presents a situation where an RFP has gone wrong, and you will diagnose the issue.</p>
+                    <p>Read each scenario carefully and select the best answer. You will receive detailed feedback to reinforce your learning.</p>
+                    <button class="continue-btn" id="start-btn">Begin Scenarios</button>
                 </div>
             </div>
 
@@ -382,17 +333,17 @@
                 <h2 style="color: #3D3D3D; margin-bottom: 25px; font-size: 2em;">Real-World RFP Challenges</h2>
                 
                 <div class="progress-indicator" id="progress-dots">
-                    <div class="progress-dot active"></div>
-                    <div class="progress-dot"></div>
-                    <div class="progress-dot"></div>
-                    <div class="progress-dot"></div>
+                    <div class="progress-dot active" id="dot-0"></div>
+                    <div class="progress-dot" id="dot-1"></div>
+                    <div class="progress-dot" id="dot-2"></div>
+                    <div class="progress-dot" id="dot-3"></div>
                 </div>
 
                 <div id="scenarios-container"></div>
 
                 <div class="nav-buttons">
-                    <button class="btn btn-secondary" onclick="showSection('intro-section')">← Back to Introduction</button>
-                    <button class="btn" id="finish-btn" onclick="showCompletion()" disabled>Complete Scenarios →</button>
+                    <button class="btn btn-secondary" id="back-btn">Back to Introduction</button>
+                    <button class="btn" id="finish-btn" disabled>Complete Scenarios</button>
                 </div>
             </div>
 
@@ -400,20 +351,20 @@
                 <div class="completion-message">
                     <div class="trophy">🏆</div>
                     <h2>Excellent Work!</h2>
-                    <p>You've successfully completed all four RFP writing scenarios. You can now identify common gaps in RFP documentation and understand how missing components affect vendor responses.</p>
+                    <p>You have successfully completed all four RFP writing scenarios. You can now identify common gaps in RFP documentation and understand how missing components affect vendor responses.</p>
                     <p>These diagnostic skills will help you create stronger RFPs that attract qualified vendors and establish successful partnerships.</p>
-                    <button class="btn" onclick="showSection('intro-section'); resetModule();">Review Scenarios</button>
-                    <button class="btn reset-btn" onclick="resetModule(); showSection('intro-section');">Start Over</button>
+                    <button class="btn" id="review-btn">Review Scenarios</button>
+                    <button class="btn reset-btn" id="restart-btn">Start Over</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const scenarios = [
+        var scenarios = [
             {
                 title: "The Missing Context",
-                scenario: "TechStart Inc. has drafted an RFP for a new customer portal. The document includes detailed technical specifications, budget, timeline, and submission requirements. However, after distributing it to five potential vendors, they receive only one response, and it seems generic and doesn't address their unique needs.",
+                scenario: "TechStart Inc. has drafted an RFP for a new customer portal. The document includes detailed technical specifications, budget, timeline, and submission requirements. However, after distributing it to five potential vendors, they receive only one response, and it seems generic and does not address their unique needs.",
                 question: "What critical element is likely missing from TechStart's RFP?",
                 choices: [
                     "Budget range details",
@@ -422,10 +373,8 @@
                     "Technical specifications"
                 ],
                 correct: 1,
-                feedback: {
-                    correct: "Excellent! Without understanding the 'why' behind the project (the current challenges or opportunities driving it), vendors can't craft tailored solutions. They need context about what obstacles the portal will solve or what opportunities it will enable. This missing problem statement leads to generic proposals because vendors are just guessing at your real needs.",
-                    incorrect: "Not quite. The scenario mentions TechStart already included technical specs, budget, and timeline. The issue is vendors submitted generic proposals that didn't address unique needs. This suggests they lacked the context to understand TechStart's specific situation. Without a problem statement explaining the challenges or opportunities driving this project, vendors can only provide cookie-cutter solutions."
-                }
+                feedbackCorrect: "Excellent! Without understanding the 'why' behind the project (the current challenges or opportunities driving it), vendors cannot craft tailored solutions. They need context about what obstacles the portal will solve or what opportunities it will enable. This missing problem statement leads to generic proposals because vendors are just guessing at your real needs.",
+                feedbackIncorrect: "Not quite. The scenario mentions TechStart already included technical specs, budget, and timeline. The issue is vendors submitted generic proposals that did not address unique needs. This suggests they lacked the context to understand TechStart's specific situation. Without a problem statement explaining the challenges or opportunities driving this project, vendors can only provide cookie-cutter solutions."
             },
             {
                 title: "The Incomplete Requirements",
@@ -438,80 +387,6 @@
                     "A shorter timeline for submission"
                 ],
                 correct: 2,
-                feedback: {
-                    correct: "Exactly right! By specifying required proposal elements (such as team qualifications, approach methodology, relevant experience, itemized budget, timeline estimates, and key assumptions), HealthCare Partners would have received structured, comparable responses. While vendors maintain their own proposal styles, defining must-have components ensures you can evaluate proposals against consistent criteria.",
-                    incorrect: "Not the best answer. The issue here is that proposals were incomparable and difficult to evaluate against each other. More background or technical detail wouldn't solve that problem. What's missing is a clear specification of required proposal elements (things like team overview, methodology, portfolio, budget breakdown, and assumptions). This structure would have given vendors a framework to follow, making proposals comparable."
-                }
-            },
-            {
-                title: "The Budget Dilemma",
-                scenario: "Metro Transit Authority has developed an RFP for a mobile app project. They've intentionally excluded budget information, hoping vendors will propose their 'best price.' After receiving eight proposals, they find the range spans from $50,000 to $400,000. Most proposals from their preferred vendors exceed their actual $120,000 budget, and the low-cost proposals lack the expertise they need.",
-                question: "How should Metro Transit Authority revise their RFP approach?",
-                choices: [
-                    "Accept one of the low-cost proposals and try to work within that vendor's limitations",
-                    "Include their budget range ($100,000-$140,000) so vendors can self-select and right-size their proposals",
-                    "Keep the budget hidden but eliminate vendors that are too expensive or too cheap",
-                    "Negotiate down the price with their preferred vendor after selection"
-                ],
-                correct: 1,
-                feedback: {
-                    correct: "Perfect! Including a realistic budget range benefits everyone involved. Vendors can assess whether they're a good match before investing time in a proposal, and you receive appropriately scoped responses aligned with your financial reality. This transparency saves time for both parties and yields proposals you can actually consider. If you're unsure what's realistic, consulting peers about similar projects helps establish an appropriate range.",
-                    incorrect: "This approach wastes time for everyone involved. By including a realistic budget range from the start, Metro Transit would have saved vendors from crafting proposals that were never viable financially. Transparency about budget lets vendors self-select (those outside the range won't submit, while qualified vendors can tailor proposals to fit). This leads to right-sized, realistic proposals you can actually act on."
-                }
-            },
-            {
-                title: "The Vague Timeline",
-                scenario: "Global Health Initiative issued an RFP for a comprehensive monitoring and evaluation system. The document clearly outlines objectives, budget, technical requirements, and submission guidelines. They received six strong proposals from qualified firms. However, during vendor interviews, three firms withdrew because they couldn't commit to an unclear timeline. The remaining vendors each proposed different project durations ranging from 6 to 18 months.",
-                question: "What should Global Health Initiative have included in their RFP to avoid this situation?",
-                choices: [
-                    "More detailed technical specifications to help vendors estimate time requirements",
-                    "Clear schedule and milestones including proposal deadline, desired start date, target completion, and whether timeline is flexible or fixed",
-                    "A requirement that all vendors propose the same project duration",
-                    "Contact information for vendors to ask timeline questions after submission"
-                ],
-                correct: 1,
-                feedback: {
-                    correct: "Exactly! Communicating clear deadlines for proposal submission, desired project launch, and target completion helps vendors assess whether they can accommodate your needs. Critically, indicating whether dates are fixed or flexible allows vendors to determine if they have capacity. Without this information, qualified vendors may self-select out, and those who do propose can't align their timelines with your actual needs.",
-                    incorrect: "Not quite. While these elements might help, the core issue is that vendors had no timeline information to work with. They couldn't assess their capacity or align proposals with the organization's needs. Clear schedule and milestones (proposal deadline, project start, target completion, and flexibility indicators) would have enabled vendors to determine fit and propose realistic timelines aligned with the organization's requirements."
-                }
-            }
-        ];
-
-        let scenariosCompleted = 0;
-        let currentScenarioIndex = 0;
-
-        function initScenarios() {
-            const container = document.getElementById('scenarios-container');
-            container.innerHTML = '';
-            
-            scenarios.forEach((scenario, index) => {
-                const scenarioEl = document.createElement('div');
-                scenarioEl.className = 'scenario-container';
-                scenarioEl.id = `scenario-${index}`;
-                scenarioEl.innerHTML = `
-                    <div class="scenario-counter">Scenario ${index + 1} of ${scenarios.length}</div>
-                    <h3 class="scenario-title">${scenario.title}</h3>
-                    <div class="scenario-content">
-                        <strong>Situation:</strong>
-                        ${scenario.scenario}
-                        <br><br>
-                        <strong>${scenario.question}</strong>
-                    </div>
-                    <div class="choice-container" id="choices-${index}">
-                        ${scenario.choices.map((choice, i) => `
-                            <button class="choice-btn" onclick="selectAnswer(${index}, ${i})">
-                                ${choice}
-                            </button>
-                        `).join('')}
-                    </div>
-                    <div class="feedback" id="feedback-${index}"></div>
-                `;
-                container.appendChild(scenarioEl);
-            });
-        }
-
-        function selectAnswer(scenarioIndex, choiceIndex) {
-            const scenario = scenarios[scenarioIndex];
-            const choices = document.querySelectorAll(`#choices-$
+                feedbackCorrect: "Exactly right! By specifying required proposal elements (such as team qualifications, approach methodology, relevant experience, itemized budget, timeline estimates, and key assumptions), HealthCare Partners would have received structured, comparable responses. While vendors maintain their own proposal styles, defining must-have components ensures you can
 
                                                       
