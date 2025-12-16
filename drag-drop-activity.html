@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RFP Building Blocks - Order Activity</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #91A79E 0%, #5B9A92 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #91A79E 0%, #5B9A92 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .intro-section {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .intro-section h2 {
+            color: #3D3D3D;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .intro-section p {
+            color: #3D3D3D;
+            font-size: 1.2em;
+            line-height: 1.8;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .continue-btn {
+            background: linear-gradient(135deg, #91A79E 0%, #5B9A92 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(91, 154, 146, 0.4);
+        }
+
+        .continue-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(91, 154, 146, 0.6);
+        }
+
+        .instructions {
+            background: #F4F8F7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #5B9A92;
+        }
+
+        .instructions h3 {
+            color: #5B9A92;
+            margin-bottom: 10px;
+        }
+
+        .instructions p {
+            color: #3D3D3D;
+            line-height: 1.6;
+        }
+
+        .activity-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .activity-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .blocks-pool {
+            background: #F5F5F5;
+            padding: 25px;
+            border-radius: 12px;
+            min-height: 400px;
+        }
+
+        .blocks-pool h3 {
+            color: #3D3D3D;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .drop-zone {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            border: 3px dashed #91A79E;
+            min-height: 400px;
+        }
+
+        .drop-zone h3 {
+            color: #3D3D3D;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .drop-zone.drag-over {
+            background: #F4F8F7;
+            border-color: #5B9A92;
+        }
+
+        .block {
+            background: white;
+            border: 2px solid #91A79E;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            cursor: move;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .block:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(91, 154, 146, 0.3);
+        }
+
+        .block.dragging {
+            opacity: 0.5;
+            transform: rotate(2deg);
+        }
+
+        .block-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #91A79E 0%, #5B9A92 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+
+        .block-content {
+            flex: 1;
+        }
+
+        .block-title {
+            font-weight: 600;
+            color: #3D3D3D;
+            font-size: 1.05em;
+            margin-bottom: 4px;
+        }
+
+        .block-subtitle {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .drop-slot {
+            background: #F5F5F5;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 12px;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .drop-slot::before {
+            content: attr(data-position);
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background: #E5CDD1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #8B9396;
+            font-size: 0.9em;
+        }
+
+        .drop-slot.has-block::before {
+            background: #5B9A92;
+            color: white;
+        }
+
+        .drop-slot-content {
+            width: 100%;
+            padding-left: 45px;
+            color: #999;
+            font-style: italic;
+        }
+
+        .drop-slot.drag-over {
+            background: #E8F4F2;
+            border-color: #5B9A92;
+            border-style: solid;
+        }
+
+        .drop-slot.has-block {
+            background: white;
+            border: 2px solid #5B9A92;
+        }
+
+        .drop-slot.has-block .drop-slot-content {
+            display: none;
+        }
+
+        .drop-slot .block {
+            width: 100%;
+            margin: 0;
+        }
+
+        .feedback {
+            display: none;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 25px;
+            animation: slideDown 0.4s ease;
+            line-height: 1.7;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #E8F4F2;
+            border-left: 5px solid #5B9A92;
+            color: #2D5B54;
+        }
+
+        .feedback.incorrect {
+            background: #FCF0ED;
+            border-left: 5px solid #E67E50;
+            color: #8B4A2C;
+        }
+
+        .feedback.partial {
+            background: #FFF8E8;
+            border-left: 5px solid #E6B855;
+            color: #8B7333;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feedback-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #91A79E 0%, #5B9A92 100%);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(91, 154, 146, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(91, 154, 146, 0.6);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #5B9A92;
+            border: 2px solid #5B9A92;
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: #F4F8F7;
+        }
+
+        .btn-check {
+            background: #E67E50;
+        }
+
+        .btn-check:hover {
+            background: #D46A40;
+        }
+
+        .btn-reset {
+            background: #E6B855;
+        }
+
+        .btn-reset:hover {
+            background: #D4A845;
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .completion-message h2 {
+            color: #5B9A92;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .completion-message p {
+            color: #3D3D3D;
+            font-size: 1.2em;
+            line-height: 1.7;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        .trophy {
+            font-size: 5em;
+            margin-bottom: 20px;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hint-box {
+            background: #FFF8E8;
+            border-left: 4px solid #E6B855;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .hint-box.show {
+            display: block;
+            animation: slideDown 0.4s ease;
+        }
+
+        .hint-box strong {
+            color: #8B7333;
+        }
+
+        .hint-box p {
+            color: #3D3D3D;
+            margin-top: 8px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏗️ Building Blocks of an RFP</h1>
+            <p>Arrange the components in the correct order</p>
+        </div>
+
+        <div class="content">
+            <div id="intro-section" class="section active">
+                <div class="intro-section">
+                    <h2>Construct Your RFP Foundation</h2>
+                    <p>Just as a building needs its components assembled in the right order, an effective RFP requires careful sequencing of its eight essential building blocks.</p>
+                    <p>In this activity, you'll drag and drop each building block into its proper position, creating a solid foundation for vendor partnerships and collaboration.</p>
+                    <button class="continue-btn" onclick="startActivity()">Begin Activity →</button>
+                </div>
+            </div>
+
+            <div id="activity-section" class="section">
+                <div class="instructions">
+                    <h3>Instructions</h3>
+                    <p><strong>Drag</strong> each building block from the left pool and <strong>drop</strong> it into the correct position on the right. Think about which components lay the foundation and which ones come later in the construction process. When you're done, click "Check My Order" to see how you did!</p>
+                </div>
+
+                <div class="activity-container">
+                    <div class="blocks-pool">
+                        <h3>Building Blocks</h3>
+                        <div id="blocks-container"></div>
+                    </div>
+
+                    <div class="drop-zone" id="drop-zone">
+                        <h3>Your RFP Structure</h3>
+                        <div id="drop-slots-container"></div>
+                    </div>
+                </div>
+
+                <div id="feedback" class="feedback"></div>
+                <div id="hint" class="hint-box"></div>
+
+                <div class="nav-buttons">
+                    <button class="btn btn-secondary" onclick="showSection('intro-section')">← Back</button>
+                    <button class="btn btn-reset" onclick="resetActivity()">Reset</button>
+                    <button class="btn btn-check" onclick="checkOrder()">Check My Order</button>
+                </div>
+            </div>
+
+            <div id="completion-section" class="section">
+                <div class="completion-message">
+                    <div class="trophy">🏆</div>
+                    <h2>Perfect Construction!</h2>
+                    <p>You've successfully arranged all eight building blocks in the correct order. You now understand how each component builds upon the previous one to create a solid RFP foundation.</p>
+                    <p>This sequencing ensures your RFPs provide the context, clarity, and structure needed to attract qualified vendors and establish successful partnerships.</p>
+                    <button class="btn" onclick="resetActivity(); showSection('activity-section');">Practice Again</button>
+                    <button class="btn btn-secondary" onclick="showSection('intro-section');">← Back to Start</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const blocks = [
+            { id: 1, title: "Executive Overview", subtitle: "Organization context & timing", correctPosition: 1 },
+            { id: 2, title: "Problem Statement & Drivers", subtitle: "Challenges & opportunities", correctPosition: 2 },
+            { id: 3, title: "Success Metrics & Objectives", subtitle: "Measurable outcomes", correctPosition: 3 },
+            { id: 4, title: "Scope & Deliverables", subtitle: "Requirements & guidance needed", correctPosition: 4 },
+            { id: 5, title: "Financial Parameters", subtitle: "Budget range transparency", correctPosition: 5 },
+            { id: 6, title: "Response Requirements", subtitle: "Proposal must-haves", correctPosition: 6 },
+            { id: 7, title: "Schedule & Milestones", subtitle: "Timeline & flexibility", correctPosition: 7 },
+            { id: 8, title: "Communication Protocol", subtitle: "Point person & process", correctPosition: 8 }
+        ];
+
+        let draggedElement = null;
+        let placedBlocks = {};
+
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        function initActivity() {
+            const shuffledBlocks = shuffleArray(blocks);
+            const blocksContainer = document.getElementById('blocks-container');
+            const dropSlotsContainer = document.getElementById('drop-slots-container');
+            
+            blocksContainer.innerHTML = '';
+            dropSlotsContainer.innerHTML = '';
+            placedBlocks = {};
+
+            shuffledBlocks.forEach(block => {
+                const blockEl = createBlockElement(block);
+                blocksContainer.appendChild(blockEl);
+            });
+
+            for (let i = 1; i <= 8; i++) {
+                const slot = document.createElement('div');
+                slot.className = 'drop-slot';
+                slot.dataset.position = i;
+                slot.innerHTML = `<div class="drop-slot-content">Drop block ${i} here</div>`;
+                
+                slot.addEventListener('dragover', handleDragOver);
+                slot.addEventListener('drop', handleDrop);
+                slot.addEventListener('dragleave', handleDragLeave);
+                
+                dropSlotsContainer.appendChild(slot);
+            }
+
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('hint').className = 'hint-box';
+        }
+
+        function createBlockElement(block) {
+            const blockEl = document.createElement('div');
+            blockEl.className = 'block';
+            blockEl.draggable = true;
+            blockEl.dataset.blockId = block.id;
+            blockEl.innerHTML = `
+                <div class="block-icon">${block.id}</div>
+                <div class="block-content">
+                    <div class="block-title">${block.title}</div>
+                    <div class="block-subtitle">${block.subtitle}</div>
+                </div>
+            `;
+
+            blockEl.addEventListener('dragstart', handleDragStart);
+            blockEl.addEventListener('dragend', handleDragEnd);
+
+            return blockEl;
+        }
+
+        function handleDragStart(e) {
+            draggedElement = e.currentTarget;
+            e.currentTarget.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragEnd(e) {
+            e.currentTarget.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            if (!e.currentTarget.classList.contains('has-block')) {
+                e.currentTarget.classList.add('drag-over');
+            }
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+
+            if (!draggedElement) return;
+
+            const slot = e.currentTarget.closest('.drop-slot');
+            if (!slot || slot.classList.contains('has-block')) return;
+
+            const position = parseInt(slot.dataset.position);
+            const blockId = parseInt(draggedElement.dataset.blockId);
+
+            Object.keys(placedBlocks).forEach(pos => {
+                if (placedBlocks[pos] === blockId) {
+                    delete placedBlocks[pos];
+                }
+            });
+
+            placedBlocks[position] = blockId;
+
+            if (draggedElement.parentElement.classList.contains('drop-slot')) {
+                const oldSlot = draggedElement.parentElement;
+                oldSlot.classList.remove('has-block');
+                oldSlot.querySelector('.drop-slot-content').style.display = 'block';
+            }
+            draggedElement.remove();
+
+            slot.appendChild(draggedElement);
+            slot.classList.add('has-block');
+
+            draggedElement = null;
+
+            document.getElementById('feedback').className = 'feedback';
+            document.getElementById('hint').className = 'hint-box';
+        }
+
+        function checkOrder() {
+            const feedback = document.getElementById('feedback');
+            const hint = document.getElementById('hint');
+            
+            let correct = 0;
+            let misplaced = [];
+
+            blocks.forEach(block => {
+                const placedPosition = Object.keys(placedBlocks).find(pos => placedBlocks[pos] === block.id);
+                if (placedPosition && parseInt(placedPosition) === block.correctPosition) {
+                    correct++;
+                } else if (placedPosition) {
+                    misplaced.push({ block: block.title, placed: placedPosition, correct: block.correctPosition });
+                }
+            });
+
+            if (correct === 8) {
+                feedback.className = 'feedback show correct';
+                feedback.innerHTML = `
+                    <span class="feedback-icon">✓</span>
+                    <strong>Perfect! You've constructed a solid RFP foundation!</strong><br>
+                    All eight building blocks are in the correct order. This sequence ensures that each component builds logically on the previous one, from establishing context to defining communication protocols. Well done!
+                `;
+                setTimeout(() => showSection('completion-section'), 2000);
+            } else if (correct >= 5) {
+                feedback.className = 'feedback show partial';
+                feedback.innerHTML = `
+                    <span class="feedback-icon">⚠</span>
+                    <strong>You're close! ${correct} out of 8 blocks are correctly placed.</strong><br>
+                    Think about the logical flow: Start with context and "why," move to goals and requirements, then address practical matters like budget and timeline, and finish with communication protocols.
+                `;
+                
+                hint.className = 'hint-box show';
+                hint.innerHTML = `
+                    <strong>💡 Hint:</strong>
+                    <p>Consider this flow: Set the stage → Explain the need → Define success → Detail requirements → Address finances → Specify proposal format → Set timing → Establish communication</p>
+                `;
+            } else {
+                feedback.className = 'feedback show incorrect';
+                feedback.innerHTML = `
+                    <span class="feedback-icon">✗</span>
+                    <strong>Not quite. ${correct} out of 8 blocks are correctly placed.</strong><br>
+                    Think about building from foundation to finish: What does a vendor need to know first? What comes last? Try arranging blocks that provide context and rationale early, and logistical details later.
+                `;
+                
+                hint.className = 'hint-box show';
+                hint.innerHTML = `
+                    <strong>💡 Hint:</strong>
+                    <p>A strong RFP follows this pattern: <em>Context first</em> (who you are, why now), then <em>the need</em> (problems/goals), then <em>requirements</em> (scope/budget), and finally <em>logistics</em> (timeline/communication).</p>
+                `;
+            }
+        }
+
+        function resetActivity() {
+            initActivity();
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function startActivity() {
+            showSection('activity-section');
+            initActivity();
+        }
+
+        window.onload = function() {
+            initActivity();
+        };
+    </script>
+</body>
+</html>
