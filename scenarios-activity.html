@@ -5,311 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RFP Writing Scenarios</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: linear-gradient(135deg, #91A79E 0%, #5B9A92 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #91A79E 0%, #5B9A92 100%);
-            color: white;
-            padding: 40px;
-            text-align: center;
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            font-size: 1.2em;
-            opacity: 0.95;
-        }
-
-        .content {
-            padding: 40px;
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        .intro-section {
-            text-align: center;
-            padding: 20px;
-        }
-
-        .intro-section h2 {
-            color: #3D3D3D;
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
-
-        .intro-section p {
-            color: #3D3D3D;
-            font-size: 1.2em;
-            line-height: 1.8;
-            max-width: 700px;
-            margin: 0 auto 30px;
-        }
-
-        .continue-btn {
-            background: linear-gradient(135deg, #91A79E 0%, #5B9A92 100%);
-            color: white;
-            border: none;
-            padding: 18px 40px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.2em;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(91, 154, 146, 0.4);
-        }
-
-        .continue-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(91, 154, 146, 0.6);
-        }
-
-        .scenario-container {
-            background: #F5F5F5;
-            padding: 30px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-        }
-
-        .scenario-counter {
-            background: #5B9A92;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-bottom: 15px;
-            font-size: 0.9em;
-            font-weight: 600;
-        }
-
-        .scenario-title {
-            font-size: 1.5em;
-            color: #3D3D3D;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #5B9A92;
-        }
-
-        .scenario-content {
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            border-left: 4px solid #E67E50;
-            line-height: 1.7;
-            color: #3D3D3D;
-        }
-
-        .scenario-content strong {
-            color: #5B9A92;
-            display: block;
-            margin-bottom: 12px;
-            font-size: 1.1em;
-        }
-
-        .choice-container {
-            display: grid;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .choice-btn {
-            background: white;
-            border: 2px solid #91A79E;
-            padding: 18px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: left;
-            font-size: 1.05em;
-            color: #3D3D3D;
-        }
-
-        .choice-btn:hover {
-            background: #F4F8F7;
-            transform: translateX(5px);
-            box-shadow: 0 4px 12px rgba(91, 154, 146, 0.2);
-        }
-
-        .choice-btn.selected-correct {
-            background: #E8F4F2;
-            border-color: #5B9A92;
-        }
-
-        .choice-btn.selected-incorrect {
-            background: #FCF0ED;
-            border-color: #E67E50;
-        }
-
-        .feedback {
-            display: none;
-            padding: 25px;
-            border-radius: 8px;
-            margin-top: 25px;
-            line-height: 1.7;
-        }
-
-        .feedback.show {
-            display: block;
-        }
-
-        .feedback.correct {
-            background: #E8F4F2;
-            border-left: 5px solid #5B9A92;
-            color: #2D5B54;
-        }
-
-        .feedback.incorrect {
-            background: #FCF0ED;
-            border-left: 5px solid #E67E50;
-            color: #8B4A2C;
-        }
-
-        .try-again-btn {
-            background: #E67E50;
-            color: white;
-            border: none;
-            padding: 12px 28px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1em;
-            font-weight: 600;
-            margin-top: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .try-again-btn:hover {
-            background: #D46A40;
-        }
-
-        .nav-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 40px;
-            gap: 15px;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #91A79E 0%, #5B9A92 100%);
-            color: white;
-            border: none;
-            padding: 15px 35px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.1em;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(91, 154, 146, 0.4);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(91, 154, 146, 0.6);
-        }
-
-        .btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
-        }
-
-        .btn-secondary {
-            background: white;
-            color: #5B9A92;
-            border: 2px solid #5B9A92;
-            box-shadow: none;
-        }
-
-        .btn-secondary:hover {
-            background: #F4F8F7;
-        }
-
-        .completion-message {
-            text-align: center;
-            padding: 50px 20px;
-        }
-
-        .completion-message h2 {
-            color: #5B9A92;
-            font-size: 2.5em;
-            margin-bottom: 20px;
-        }
-
-        .completion-message p {
-            color: #3D3D3D;
-            font-size: 1.2em;
-            line-height: 1.7;
-            max-width: 600px;
-            margin: 0 auto 30px;
-        }
-
-        .trophy {
-            font-size: 5em;
-            margin-bottom: 20px;
-        }
-
-        .progress-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
-        .progress-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #E5CDD1;
-            transition: all 0.3s ease;
-        }
-
-        .progress-dot.active {
-            background: #5B9A92;
-            transform: scale(1.3);
-        }
-
-        .progress-dot.completed {
-            background: #E6B855;
-        }
-
-        .reset-btn {
-            background: #E67E50;
-            margin-top: 20px;
-        }
-
-        .reset-btn:hover {
-            background: #D46A40;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, Helvetica, sans-serif; background: linear-gradient(135deg, #91A79E 0%, #5B9A92 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #91A79E 0%, #5B9A92 100%); color: white; padding: 40px; text-align: center; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header p { font-size: 1.2em; opacity: 0.95; }
+        .content { padding: 40px; }
+        .section { display: none; }
+        .section.active { display: block; }
+        .intro-section { text-align: center; padding: 20px; }
+        .intro-section h2 { color: #3D3D3D; font-size: 2em; margin-bottom: 20px; }
+        .intro-section p { color: #3D3D3D; font-size: 1.2em; line-height: 1.8; max-width: 700px; margin: 0 auto 30px; }
+        .continue-btn { background: linear-gradient(135deg, #91A79E 0%, #5B9A92 100%); color: white; border: none; padding: 18px 40px; border-radius: 8px; cursor: pointer; font-size: 1.2em; font-weight: 600; }
+        .continue-btn:hover { transform: translateY(-3px); }
+        .scenario-container { background: #F5F5F5; padding: 30px; border-radius: 12px; margin-bottom: 25px; }
+        .scenario-counter { background: #5B9A92; color: white; padding: 8px 16px; border-radius: 20px; display: inline-block; margin-bottom: 15px; font-size: 0.9em; font-weight: 600; }
+        .scenario-title { font-size: 1.5em; color: #3D3D3D; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 3px solid #5B9A92; }
+        .scenario-content { background: white; padding: 25px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #E67E50; line-height: 1.7; color: #3D3D3D; }
+        .scenario-label { color: #5B9A92; display: block; margin-bottom: 12px; font-size: 1.1em; font-weight: bold; }
+        .choice-container { display: grid; gap: 15px; margin-top: 20px; }
+        .choice-btn { background: white; border: 2px solid #91A79E; padding: 18px 24px; border-radius: 8px; cursor: pointer; text-align: left; font-size: 1.05em; color: #3D3D3D; }
+        .choice-btn:hover { background: #F4F8F7; transform: translateX(5px); }
+        .choice-btn.correct { background: #E8F4F2; border-color: #5B9A92; }
+        .choice-btn.incorrect { background: #FCF0ED; border-color: #E67E50; }
+        .feedback { display: none; padding: 25px; border-radius: 8px; margin-top: 25px; line-height: 1.7; }
+        .feedback.show { display: block; }
+        .feedback.correct { background: #E8F4F2; border-left: 5px solid #5B9A92; color: #2D5B54; }
+        .feedback.incorrect { background: #FCF0ED; border-left: 5px solid #E67E50; color: #8B4A2C; }
+        .try-again-btn { background: #E67E50; color: white; border: none; padding: 12px 28px; border-radius: 6px; cursor: pointer; font-size: 1em; font-weight: 600; margin-top: 15px; }
+        .try-again-btn:hover { background: #D46A40; }
+        .nav-buttons { display: flex; justify-content: space-between; margin-top: 40px; gap: 15px; }
+        .btn { background: linear-gradient(135deg, #91A79E 0%, #5B9A92 100%); color: white; border: none; padding: 15px 35px; border-radius: 8px; cursor: pointer; font-size: 1.1em; font-weight: 600; }
+        .btn:hover { transform: translateY(-2px); }
+        .btn:disabled { background: #ccc; cursor: not-allowed; }
+        .btn-secondary { background: white; color: #5B9A92; border: 2px solid #5B9A92; }
+        .btn-secondary:hover { background: #F4F8F7; }
+        .completion-message { text-align: center; padding: 50px 20px; }
+        .completion-message h2 { color: #5B9A92; font-size: 2.5em; margin-bottom: 20px; }
+        .completion-message p { color: #3D3D3D; font-size: 1.2em; line-height: 1.7; max-width: 600px; margin: 0 auto 30px; }
+        .trophy { font-size: 5em; margin-bottom: 20px; }
+        .progress-indicator { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
+        .progress-dot { width: 12px; height: 12px; border-radius: 50%; background: #E5CDD1; }
+        .progress-dot.active { background: #5B9A92; transform: scale(1.3); }
+        .progress-dot.completed { background: #E6B855; }
+        .reset-btn { background: #E67E50; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -318,75 +58,185 @@
             <h1>RFP Writing Scenarios</h1>
             <p>Apply your knowledge to real-world situations</p>
         </div>
-
         <div class="content">
             <div id="intro-section" class="section active">
                 <div class="intro-section">
                     <h2>Test Your RFP Expertise</h2>
-                    <p>You will encounter four real-world scenarios that test your ability to identify common RFP gaps and determine where writers should focus their efforts. Each scenario presents a situation where an RFP has gone wrong, and you will diagnose the issue.</p>
+                    <p>You will encounter four real-world scenarios that test your ability to identify common RFP gaps and determine where writers should focus their efforts.</p>
                     <p>Read each scenario carefully and select the best answer. You will receive detailed feedback to reinforce your learning.</p>
                     <button class="continue-btn" id="start-btn">Begin Scenarios</button>
                 </div>
             </div>
-
             <div id="scenarios-section" class="section">
                 <h2 style="color: #3D3D3D; margin-bottom: 25px; font-size: 2em;">Real-World RFP Challenges</h2>
-                
-                <div class="progress-indicator" id="progress-dots">
-                    <div class="progress-dot active" id="dot-0"></div>
-                    <div class="progress-dot" id="dot-1"></div>
-                    <div class="progress-dot" id="dot-2"></div>
-                    <div class="progress-dot" id="dot-3"></div>
+                <div class="progress-indicator">
+                    <div class="progress-dot active" id="dot0"></div>
+                    <div class="progress-dot" id="dot1"></div>
+                    <div class="progress-dot" id="dot2"></div>
+                    <div class="progress-dot" id="dot3"></div>
                 </div>
-
                 <div id="scenarios-container"></div>
-
                 <div class="nav-buttons">
                     <button class="btn btn-secondary" id="back-btn">Back to Introduction</button>
                     <button class="btn" id="finish-btn" disabled>Complete Scenarios</button>
                 </div>
             </div>
-
             <div id="completion-section" class="section">
                 <div class="completion-message">
                     <div class="trophy">🏆</div>
                     <h2>Excellent Work!</h2>
                     <p>You have successfully completed all four RFP writing scenarios. You can now identify common gaps in RFP documentation and understand how missing components affect vendor responses.</p>
-                    <p>These diagnostic skills will help you create stronger RFPs that attract qualified vendors and establish successful partnerships.</p>
                     <button class="btn" id="review-btn">Review Scenarios</button>
                     <button class="btn reset-btn" id="restart-btn">Start Over</button>
                 </div>
             </div>
         </div>
     </div>
+<script>
+var defined = [];
+defined[0] = {
+    title: "The Missing Context",
+    scenario: "TechStart Inc. has drafted an RFP for a new customer portal. The document includes detailed technical specifications, budget, timeline, and submission requirements. However, after distributing it to five potential vendors, they receive only one response, and it seems generic.",
+    question: "What critical element is likely missing from TechStart's RFP?",
+    choices: ["Budget range details", "Problem statement explaining why this project matters now", "Timeline and deadlines", "Technical specifications"],
+    correct: 1,
+    feedbackCorrect: "Excellent! Without understanding the why behind the project, vendors cannot craft tailored solutions. This missing problem statement leads to generic proposals.",
+    feedbackIncorrect: "Not quite. The scenario mentions TechStart already included technical specs, budget, and timeline. Without a problem statement explaining the challenges driving this project, vendors can only provide cookie-cutter solutions."
+};
+defined[1] = {
+    title: "The Incomplete Requirements",
+    scenario: "HealthCare Partners is seeking a vendor for a major website redesign. Their RFP includes background information, desired features, budget, and timeline. Three vendors submit proposals, but each takes a wildly different approach with incomparable pricing structures.",
+    question: "What should HealthCare Partners have included to receive more comparable proposals?",
+    choices: ["A longer organizational background section", "More detailed technical specifications", "Required proposal elements specifying what vendors must include", "A shorter timeline for submission"],
+    correct: 2,
+    feedbackCorrect: "Exactly right! By specifying required proposal elements, HealthCare Partners would have received structured, comparable responses.",
+    feedbackIncorrect: "Not the best answer. What is missing is a clear specification of required proposal elements. This structure would have given vendors a framework to follow."
+};
+defined[2] = {
+    title: "The Budget Dilemma",
+    scenario: "Metro Transit Authority has developed an RFP for a mobile app project. They excluded budget information, hoping vendors will propose their best price. After receiving eight proposals, the range spans from $50,000 to $400,000. Most proposals from preferred vendors exceed their $120,000 budget.",
+    question: "How should Metro Transit Authority revise their RFP approach?",
+    choices: ["Accept a low-cost proposal and work within limitations", "Include their budget range so vendors can self-select", "Keep the budget hidden but eliminate expensive vendors", "Negotiate down with their preferred vendor"],
+    correct: 1,
+    feedbackCorrect: "Perfect! Including a realistic budget range benefits everyone. Vendors can assess fit before investing time, and you receive appropriately scoped responses.",
+    feedbackIncorrect: "This wastes time for everyone. Transparency about budget lets vendors self-select. This leads to right-sized proposals you can actually act on."
+};
+defined[3] = {
+    title: "The Vague Timeline",
+    scenario: "Global Health Initiative issued an RFP for a monitoring and evaluation system. The document outlines objectives, budget, and requirements. They received six proposals, but during interviews, three firms withdrew because they could not commit to an unclear timeline.",
+    question: "What should Global Health Initiative have included to avoid this?",
+    choices: ["More detailed technical specifications", "Clear schedule including start date, completion, and flexibility", "A requirement for same project duration", "Contact info for timeline questions"],
+    correct: 1,
+    feedbackCorrect: "Exactly! Communicating clear deadlines and indicating whether dates are fixed or flexible allows vendors to determine if they have capacity.",
+    feedbackIncorrect: "Not quite. The core issue is vendors had no timeline information. Clear schedule and milestones would have enabled vendors to propose realistic timelines."
+};
 
-    <script>
-        var scenarios = [
-            {
-                title: "The Missing Context",
-                scenario: "TechStart Inc. has drafted an RFP for a new customer portal. The document includes detailed technical specifications, budget, timeline, and submission requirements. However, after distributing it to five potential vendors, they receive only one response, and it seems generic and does not address their unique needs.",
-                question: "What critical element is likely missing from TechStart's RFP?",
-                choices: [
-                    "Budget range details",
-                    "Problem statement explaining why this project matters now and what challenges it addresses",
-                    "Timeline and deadlines",
-                    "Technical specifications"
-                ],
-                correct: 1,
-                feedbackCorrect: "Excellent! Without understanding the 'why' behind the project (the current challenges or opportunities driving it), vendors cannot craft tailored solutions. They need context about what obstacles the portal will solve or what opportunities it will enable. This missing problem statement leads to generic proposals because vendors are just guessing at your real needs.",
-                feedbackIncorrect: "Not quite. The scenario mentions TechStart already included technical specs, budget, and timeline. The issue is vendors submitted generic proposals that did not address unique needs. This suggests they lacked the context to understand TechStart's specific situation. Without a problem statement explaining the challenges or opportunities driving this project, vendors can only provide cookie-cutter solutions."
-            },
-            {
-                title: "The Incomplete Requirements",
-                scenario: "HealthCare Partners is seeking a vendor for a major website redesign. Their RFP includes background information, desired features, budget, and timeline. Three vendors submit proposals, but each takes a wildly different approach with incomparable pricing structures. The selection committee struggles to evaluate which proposal actually meets their needs.",
-                question: "What should HealthCare Partners have included to receive more comparable, useful proposals?",
-                choices: [
-                    "A longer organizational background section",
-                    "More detailed technical specifications for every feature",
-                    "Required proposal elements specifying what information vendors must include (team overview, methodology, experience, budget breakdown, assumptions)",
-                    "A shorter timeline for submission"
-                ],
-                correct: 2,
-                feedbackCorrect: "Exactly right! By specifying required proposal elements (such as team qualifications, approach methodology, relevant experience, itemized budget, timeline estimates, and key assumptions), HealthCare Partners would have received structured, comparable responses. While vendors maintain their own proposal styles, defining must-have components ensures you can
+var completed = 0;
+var done = [false, false, false, false];
 
+function buildScenarios() {
+    var container = document.getElementById("scenarios-container");
+    container.innerHTML = "";
+    for (var i = 0; i < 4; i++) {
+        var s = defined[i];
+        var div = document.createElement("div");
+        div.className = "scenario-container";
+        div.id = "scenario" + i;
+        var html = "<div class='scenario-counter'>Scenario " + (i+1) + " of 4</div>";
+        html += "<h3 class='scenario-title'>" + s.title + "</h3>";
+        html += "<div class='scenario-content'>";
+        html += "<span class='scenario-label'>Situation:</span>" + s.scenario;
+        html += "<br><br><span class='scenario-label'>" + s.question + "</span></div>";
+        html += "<div class='choice-container' id='choices" + i + "'>";
+        for (var j = 0; j < s.choices.length; j++) {
+            html += "<button class='choice-btn' id='btn" + i + "_" + j + "'>" + s.choices[j] + "</button>";
+        }
+        html += "</div>";
+        html += "<div class='feedback' id='feedback" + i + "'></div>";
+        div.innerHTML = html;
+        container.appendChild(div);
+    }
+    for (var x = 0; x < 4; x++) {
+        for (var y = 0; y < 4; y++) {
+            (function(a, b) {
+                var btn = document.getElementById("btn" + a + "_" + b);
+                if (btn) {
+                    btn.onclick = function() { checkAnswer(a, b); };
+                }
+            })(x, y);
+        }
+    }
+}
+
+function checkAnswer(scenario, choice) {
+    var s = defined[scenario];
+    var feedback = document.getElementById("feedback" + scenario);
+    var allBtns = document.querySelectorAll("#choices" + scenario + " .choice-btn");
+    for (var i = 0; i < allBtns.length; i++) {
+        allBtns[i].className = "choice-btn";
+    }
+    var clicked = document.getElementById("btn" + scenario + "_" + choice);
+    if (choice === s.correct) {
+        clicked.className = "choice-btn correct";
+        feedback.className = "feedback show correct";
+        feedback.innerHTML = "<strong>Correct!</strong><br>" + s.feedbackCorrect;
+        for (var j = 0; j < allBtns.length; j++) {
+            allBtns[j].onclick = null;
+        }
+        if (!done[scenario]) {
+            done[scenario] = true;
+            completed++;
+            var dot = document.getElementById("dot" + scenario);
+            if (dot) { dot.className = "progress-dot completed"; }
+            var nextDot = document.getElementById("dot" + (scenario + 1));
+            if (nextDot) { nextDot.className = "progress-dot active"; }
+            if (completed === 4) {
+                document.getElementById("finish-btn").disabled = false;
+            }
+        }
+    } else {
+        clicked.className = "choice-btn incorrect";
+        feedback.className = "feedback show incorrect";
+        feedback.innerHTML = "<strong>Not quite.</strong><br>" + s.feedbackIncorrect + "<br><br><button class='try-again-btn' id='retry" + scenario + "'>Try Again</button>";
+        document.getElementById("retry" + scenario).onclick = function() {
+            feedback.className = "feedback";
+            feedback.innerHTML = "";
+            for (var k = 0; k < allBtns.length; k++) {
+                allBtns[k].className = "choice-btn";
+            }
+        };
+    }
+}
+
+function showPage(id) {
+    document.getElementById("intro-section").className = "section";
+    document.getElementById("scenarios-section").className = "section";
+    document.getElementById("completion-section").className = "section";
+    document.getElementById(id).className = "section active";
+    window.scrollTo(0, 0);
+}
+
+function reset() {
+    completed = 0;
+    done = [false, false, false, false];
+    document.getElementById("finish-btn").disabled = true;
+    document.getElementById("dot0").className = "progress-dot active";
+    document.getElementById("dot1").className = "progress-dot";
+    document.getElementById("dot2").className = "progress-dot";
+    document.getElementById("dot3").className = "progress-dot";
+    buildScenarios();
+}
+
+window.onload = function() {
+    buildScenarios();
+    document.getElementById("start-btn").onclick = function() { showPage("scenarios-section"); };
+    document.getElementById("back-btn").onclick = function() { showPage("intro-section"); };
+    document.getElementById("finish-btn").onclick = function() { showPage("completion-section"); };
+    document.getElementById("review-btn").onclick = function() { reset(); showPage("scenarios-section"); };
+    document.getElementById("restart-btn").onclick = function() { reset(); showPage("intro-section"); };
+};
+</script>
+</body>
+</html>
+```
                                                       
